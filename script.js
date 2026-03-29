@@ -34,6 +34,15 @@ menuToggle.addEventListener('click', () => {
   mobileNav.classList.toggle('open');
 });
 
+const closeMenu = document.getElementById("closeMenu");
+
+if (closeMenu) {
+	closeMenu.addEventListener("click", () => {
+		mobileNav.classList.remove("open");
+		menuToggle.classList.remove("open");
+	});
+}
+
 // Close menu on outside click
 document.addEventListener('click', (e) => {
   if (!navbar.contains(e.target)) {
