@@ -1,96 +1,86 @@
-/* ============================================
-   DINESH SINGH PORTFOLIO – SCRIPT.JS
-   Enhanced JavaScript
-   ============================================ */
+const navLinks = document.querySelectorAll(".nav-menu a");
 
-// ---- NAVBAR: Active Link on Click ----
-const navLinks = document.querySelectorAll(".nav-links a");
 navLinks.forEach((link) => {
 	link.addEventListener("click", () => {
 		navLinks.forEach((l) => l.classList.remove("active"));
 		link.classList.add("active");
-		// Close mobile menu if open
-		document.getElementById("navLinks").classList.remove("open");
-		document.getElementById("menuToggle").classList.remove("open");
+		document.getElementById("navMenu").classList.remove("open");
+		document.getElementById("hamburger").classList.remove("open");
 	});
 });
 
-// ---- NAVBAR: Scrolled Class ----
 const navbar = document.getElementById("navbar");
-window.addEventListener("scroll", () => {
-	if (window.scrollY > 50) {
-		navbar.classList.add("scrolled");
-	} else {
-		navbar.classList.remove("scrolled");
-	}
+window.addEventListener(
+	"scroll",
+	() => {
+		navbar.classList.toggle("scrolled", window.scrollY > 50);
+	},
+	{ passive: true },
+);
+
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("navMenu");
+
+hamburger.addEventListener("click", () => {
+	hamburger.classList.toggle("open");
+	navMenu.classList.toggle("open");
 });
 
-// ---- MOBILE MENU TOGGLE ----
-const menuToggle = document.getElementById("menuToggle");
-const mobileNav = document.getElementById("navLinks");
-
-menuToggle.addEventListener("click", () => {
-	menuToggle.classList.toggle("open");
-	mobileNav.classList.toggle("open");
-});
-
-const closeMenu = document.getElementById("closeMenu");
-
-if (closeMenu) {
-	closeMenu.addEventListener("click", () => {
-		mobileNav.classList.remove("open");
-		menuToggle.classList.remove("open");
+const navCloseBtn = document.getElementById("navCloseBtn");
+if (navCloseBtn) {
+	navCloseBtn.addEventListener("click", () => {
+		navMenu.classList.remove("open");
+		hamburger.classList.remove("open");
 	});
 }
 
-// Close menu on outside click
 document.addEventListener("click", (e) => {
 	if (!navbar.contains(e.target)) {
-		menuToggle.classList.remove("open");
-		mobileNav.classList.remove("open");
+		hamburger.classList.remove("open");
+		navMenu.classList.remove("open");
 	}
 });
 
-// ---- ACTIVE NAV ON SCROLL ----
 const sections = document.querySelectorAll("section[id]");
-const observerOptions = { threshold: 0.3 };
 
-const sectionObserver = new IntersectionObserver((entries) => {
-	entries.forEach((entry) => {
-		if (entry.isIntersecting) {
-			navLinks.forEach((link) => {
-				link.classList.remove("active");
-				if (link.getAttribute("href") === `#${entry.target.id}`) {
-					link.classList.add("active");
-				}
-			});
-		}
-	});
-}, observerOptions);
+const sectionObserver = new IntersectionObserver(
+	(entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				navLinks.forEach((link) => {
+					link.classList.remove("active");
+					if (link.getAttribute("href") === `#${entry.target.id}`) {
+						link.classList.add("active");
+					}
+				});
+			}
+		});
+	},
+	{ threshold: 0.3 },
+);
 
 sections.forEach((s) => sectionObserver.observe(s));
 
-// ---- TYPEWRITER EFFECT ----
-const texts = [
+const roles = [
 	"Data Analyst",
 	"Web Developer",
 	"ML Engineer",
 	"Power BI Expert",
 ];
-let textIndex = 0,
+let roleIndex = 0,
 	charIndex = 0,
-	isDeleting = false;
+	deleting = false;
 
 function typeWrite() {
 	const el = document.getElementById("typewriter");
 	if (!el) return;
-	const current = texts[textIndex];
+	const current = roles[roleIndex];
 
-	if (isDeleting) {
+	if (deleting) {
 		el.textContent = current.substring(0, charIndex--);
 		if (charIndex < 0) {
-			isDeleting = false;
-			textIndex = (textIndex + 1) % texts.length;
+			deleting = false;
+			roleIndex = (roleIndex + 1) % roles.length;
 			setTimeout(typeWrite, 400);
 			return;
 		}
@@ -98,7 +88,7 @@ function typeWrite() {
 	} else {
 		el.textContent = current.substring(0, charIndex++);
 		if (charIndex > current.length) {
-			isDeleting = true;
+			deleting = true;
 			setTimeout(typeWrite, 1800);
 			return;
 		}
@@ -107,7 +97,6 @@ function typeWrite() {
 }
 typeWrite();
 
-// ---- SKILLS FILTER ----
 const filterBtns = document.querySelectorAll(".filter-btn");
 const skillCards = document.querySelectorAll(".skill-card");
 
@@ -115,9 +104,7 @@ filterBtns.forEach((btn) => {
 	btn.addEventListener("click", () => {
 		filterBtns.forEach((b) => b.classList.remove("active"));
 		btn.classList.add("active");
-
 		const filter = btn.dataset.filter;
-
 		skillCards.forEach((card) => {
 			if (filter === "all" || card.dataset.category === filter) {
 				card.style.display = "";
@@ -135,16 +122,21 @@ filterBtns.forEach((btn) => {
 	});
 });
 
-// ---- SCROLL REVEAL (lightweight) ----
-function revealOnScroll() {
-	const reveals = document.querySelectorAll(
-		".stat-card, .skill-card, .project-card, .cert-card, .tl-card, .resume-card",
-	);
+const revealSelector =
+	".stat-card, .skill-card, .project-card, .cert-card, .tl-card, .resume-card";
 
-	reveals.forEach((el) => {
-		const rect = el.getBoundingClientRect();
-		const inView = rect.top < window.innerHeight - 80;
-		if (inView && !el.classList.contains("revealed")) {
+document.querySelectorAll(revealSelector).forEach((el) => {
+	el.style.opacity = "0";
+	el.style.transform = "translateY(28px)";
+	el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+});
+
+function revealOnScroll() {
+	document.querySelectorAll(revealSelector).forEach((el) => {
+		if (
+			el.getBoundingClientRect().top < window.innerHeight - 80 &&
+			!el.classList.contains("revealed")
+		) {
 			el.classList.add("revealed");
 			el.style.opacity = "1";
 			el.style.transform = "translateY(0)";
@@ -152,31 +144,15 @@ function revealOnScroll() {
 	});
 }
 
-// Set initial state for reveal elements
-document
-	.querySelectorAll(
-		".stat-card, .skill-card, .project-card, .cert-card, .tl-card, .resume-card",
-	)
-	.forEach((el) => {
-		el.style.opacity = "0";
-		el.style.transform = "translateY(30px)";
-		el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-	});
-
 window.addEventListener("scroll", revealOnScroll, { passive: true });
 window.addEventListener("load", revealOnScroll);
 setTimeout(revealOnScroll, 300);
 
-// ---- BACK TO TOP ----
 const backToTopBtn = document.getElementById("backToTop");
 window.addEventListener(
 	"scroll",
 	() => {
-		if (window.scrollY > 400) {
-			backToTopBtn.classList.add("visible");
-		} else {
-			backToTopBtn.classList.remove("visible");
-		}
+		backToTopBtn.classList.toggle("visible", window.scrollY > 400);
 	},
 	{ passive: true },
 );
@@ -185,7 +161,6 @@ backToTopBtn.addEventListener("click", () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// ---- CONTACT FORM ----
 const contactForm = document.getElementById("contactForm");
 const submitBtn = document.getElementById("submitBtn");
 const formSuccess = document.getElementById("formSuccess");
@@ -193,40 +168,28 @@ const formSuccess = document.getElementById("formSuccess");
 if (contactForm) {
 	contactForm.addEventListener("submit", function (e) {
 		e.preventDefault();
-
 		if (submitBtn.disabled) return;
-
 		submitBtn.disabled = true;
 		submitBtn.innerHTML = "Sending...";
 
-		const formData = new FormData(contactForm);
-
 		fetch("/", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: new URLSearchParams(formData).toString(),
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams(new FormData(contactForm)).toString(),
 		})
 			.then(() => {
 				formSuccess.classList.add("show");
 				contactForm.reset();
-
 				submitBtn.innerHTML = "Sent ✅";
-
-				// ⏳ 3 सेकंड बाद hide
 				setTimeout(() => {
 					formSuccess.classList.remove("show");
-
 					submitBtn.disabled = false;
 					submitBtn.innerHTML =
 						'<i class="fa-solid fa-paper-plane"></i> Send Message';
 				}, 3000);
 			})
-			.catch((error) => {
-				console.error(error);
+			.catch(() => {
 				alert("Something went wrong ❌");
-
 				submitBtn.disabled = false;
 				submitBtn.innerHTML =
 					'<i class="fa-solid fa-paper-plane"></i> Send Message';
@@ -234,55 +197,41 @@ if (contactForm) {
 	});
 }
 
-// ---- SMOOTH HERO PARALLAX ----
 window.addEventListener(
 	"scroll",
 	() => {
 		const hero = document.querySelector(".hero");
 		if (!hero) return;
-		const scrolled = window.scrollY;
-		const orbs = hero.querySelectorAll(".hero-bg-orb");
+		const orbs = hero.querySelectorAll(".hero-orb");
 		orbs.forEach((orb, i) => {
-			orb.style.transform = `translateY(${scrolled * (0.1 + i * 0.05)}px)`;
+			orb.style.transform = `translateY(${window.scrollY * (0.1 + i * 0.05)}px)`;
 		});
 	},
 	{ passive: true },
 );
 
-// ---- CURSUR DESIGN----
 const cursorDot = document.querySelector(".cursor-dot");
-const cursorOutline = document.querySelector(".cursor-outline");
-
-let mouseX = 0;
-let mouseY = 0;
-let outlineX = 0;
-let outlineY = 0;
+const cursorRing = document.querySelector(".cursor-ring");
+let mouseX = 0,
+	mouseY = 0,
+	ringX = 0,
+	ringY = 0;
 
 document.addEventListener("mousemove", (e) => {
 	mouseX = e.clientX;
 	mouseY = e.clientY;
-
-	// instant dot
 	cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
 });
 
 function animateCursor() {
-	// smooth follow
-	outlineX += (mouseX - outlineX) * 0.12;
-	outlineY += (mouseY - outlineY) * 0.12;
-
-	cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
-
+	ringX += (mouseX - ringX) * 0.12;
+	ringY += (mouseY - ringY) * 0.12;
+	cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
 	requestAnimationFrame(animateCursor);
 }
-
 animateCursor();
 
-// click animation
 document.addEventListener("click", () => {
-	cursorOutline.classList.add("click");
-
-	setTimeout(() => {
-		cursorOutline.classList.remove("click");
-	}, 300);
+	cursorRing.classList.add("clicked");
+	setTimeout(() => cursorRing.classList.remove("clicked"), 300);
 });
