@@ -216,6 +216,7 @@ fetch("/", {
 	});
 }
 
+
 // ---- SMOOTH HERO PARALLAX ----
 window.addEventListener(
 	"scroll",
