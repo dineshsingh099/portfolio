@@ -185,6 +185,7 @@ backToTopBtn.addEventListener("click", () => {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+// ---- CONTACT FORM ----
 const contactForm = document.getElementById("contactForm");
 const submitBtn = document.getElementById("submitBtn");
 const formSuccess = document.getElementById("formSuccess");
@@ -193,29 +194,45 @@ if (contactForm) {
 	contactForm.addEventListener("submit", function (e) {
 		e.preventDefault();
 
-		```
-submitBtn.disabled = true;
-submitBtn.innerHTML = 'Sending...';
+		if (submitBtn.disabled) return;
 
-const formData = new FormData(contactForm);
+		submitBtn.disabled = true;
+		submitBtn.innerHTML = "Sending...";
 
-fetch("/", {
-  method: "POST",
-  headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  body: new URLSearchParams(formData).toString()
-})
-.then(() => {
-  formSuccess.style.display = "block";
-  contactForm.reset();
-  submitBtn.innerHTML = "Sent ✅";
-})
-.catch(() => {
-  alert("Error ❌");
-});
-```;
+		const formData = new FormData(contactForm);
+
+		fetch("/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			body: new URLSearchParams(formData).toString(),
+		})
+			.then(() => {
+				formSuccess.classList.add("show");
+				contactForm.reset();
+
+				submitBtn.innerHTML = "Sent ✅";
+
+				// ⏳ 3 सेकंड बाद hide
+				setTimeout(() => {
+					formSuccess.classList.remove("show");
+
+					submitBtn.disabled = false;
+					submitBtn.innerHTML =
+						'<i class="fa-solid fa-paper-plane"></i> Send Message';
+				}, 3000);
+			})
+			.catch((error) => {
+				console.error(error);
+				alert("Something went wrong ❌");
+
+				submitBtn.disabled = false;
+				submitBtn.innerHTML =
+					'<i class="fa-solid fa-paper-plane"></i> Send Message';
+			});
 	});
 }
-
 
 // ---- SMOOTH HERO PARALLAX ----
 window.addEventListener(
@@ -231,3 +248,41 @@ window.addEventListener(
 	},
 	{ passive: true },
 );
+
+// ---- CURSUR DESIGN----
+const cursorDot = document.querySelector(".cursor-dot");
+const cursorOutline = document.querySelector(".cursor-outline");
+
+let mouseX = 0;
+let mouseY = 0;
+let outlineX = 0;
+let outlineY = 0;
+
+document.addEventListener("mousemove", (e) => {
+	mouseX = e.clientX;
+	mouseY = e.clientY;
+
+	// instant dot
+	cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+});
+
+function animateCursor() {
+	// smooth follow
+	outlineX += (mouseX - outlineX) * 0.12;
+	outlineY += (mouseY - outlineY) * 0.12;
+
+	cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
+
+	requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+// click animation
+document.addEventListener("click", () => {
+	cursorOutline.classList.add("click");
+
+	setTimeout(() => {
+		cursorOutline.classList.remove("click");
+	}, 300);
+});

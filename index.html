@@ -15,6 +15,8 @@
 		/>
 	</head>
 	<body>
+		<div class="cursor-dot"></div>
+		<div class="cursor-outline"></div>
 		<!-- NAVBAR -->
 		<nav class="navbar" id="navbar">
 			<a href="#home" class="logo">DS<span class="logo-dot">.</span></a>
@@ -644,6 +646,7 @@
 		<section class="contact-section" id="contact">
 			<div class="section-tag">CONTACT</div>
 			<h2 class="section-heading center">Let's Work Together</h2>
+
 			<div class="contact-container">
 				<div class="contact-info">
 					<h3>Get In Touch</h3>
@@ -651,6 +654,7 @@
 						Open to data analyst roles, internships, and freelance projects.
 						Let's connect and build something great!
 					</p>
+
 					<div class="info-item">
 						<div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
 						<div class="info-text">
@@ -658,6 +662,7 @@
 							<a href="mailto:dsrawat117@gmail.com">dsrawat117@gmail.com</a>
 						</div>
 					</div>
+
 					<div class="info-item">
 						<div class="info-icon"><i class="fa-solid fa-phone"></i></div>
 						<div class="info-text">
@@ -665,6 +670,7 @@
 							<a href="tel:+918955524407">+91 8955524407</a>
 						</div>
 					</div>
+
 					<div class="info-item">
 						<div class="info-icon">
 							<i class="fa-solid fa-location-dot"></i>
@@ -674,57 +680,76 @@
 							<span>Jaipur, Rajasthan, India</span>
 						</div>
 					</div>
+
 					<div class="contact-socials">
-						<a
-							href="https://github.com/dineshsingh099"
-							target="_blank"
-							title="GitHub"
+						<a href="https://github.com/dineshsingh099" target="_blank"
 							><i class="fa-brands fa-github"></i
 						></a>
-						<a
-							href="https://linkedin.com/in/dineshsingh09"
-							target="_blank"
-							title="LinkedIn"
+						<a href="https://linkedin.com/in/dineshsingh09" target="_blank"
 							><i class="fa-brands fa-linkedin"></i
 						></a>
-						<a
-							href="https://instagram.com/dineshsingh_077"
-							target="_blank"
-							title="Instagram"
+						<a href="https://instagram.com/dineshsingh_077" target="_blank"
 							><i class="fa-brands fa-instagram"></i
 						></a>
 					</div>
 				</div>
 
-				<form class="contact-form" id="contactForm" novalidate>
+				<!-- ✅ UPDATED FORM -->
+				<form
+					name="contact"
+					method="POST"
+					data-netlify="true"
+					netlify-honeypot="bot-field"
+					id="contactForm"
+					class="contact-form"
+				>
+					<input type="hidden" name="form-name" value="contact" />
+					<input type="text" name="bot-field" style="display: none" />
+
 					<div class="form-row">
 						<div class="form-group">
 							<label>Your Name</label>
-							<input type="text" placeholder="e.g. Rahul Sharma" required />
+							<input
+								type="text"
+								name="name"
+								placeholder="e.g. Rahul Sharma"
+								required
+							/>
 						</div>
 						<div class="form-group">
 							<label>Your Email</label>
-							<input type="email" name="email" placeholder="email@example.com" required />
+							<input
+								type="email"
+								name="email"
+								placeholder="email@example.com"
+								required
+							/>
 						</div>
 					</div>
+
 					<div class="form-group">
 						<label>Subject</label>
 						<input
 							type="text"
+							name="subject"
 							placeholder="Job Opportunity / Project Inquiry"
 						/>
 					</div>
+
 					<div class="form-group">
 						<label>Message</label>
 						<textarea
 							rows="5"
+							name="message"
 							placeholder="Tell me about the opportunity or project..."
 							required
 						></textarea>
 					</div>
+
 					<button type="submit" class="btn-primary" id="submitBtn">
 						<i class="fa-solid fa-paper-plane"></i> Send Message
 					</button>
+
 					<div class="form-success" id="formSuccess">
 						<i class="fa-solid fa-circle-check"></i> Message sent! I'll respond
 						soon.
